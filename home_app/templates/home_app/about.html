@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block hero_title %}
+درباره ما
+{% endblock %}
+{% block hero_title1 %}
+{% endblock %}
+{% block hero_title2 %}
+{% endblock %}
+{% load static %}
+{% block title %}
+درباره ما
+{% endblock %}
+{% block content %}
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-visual reveal-left">
+        <div class="about-image-box">
+          <div class="about-quote">"</div>
+          <div class="about-quote-text">ما باور داریم که هر انسانی داستانی برای گفتن دارد. نوشتار بستری است که این داستان‌ها را به هم متصل می‌کند و جهانی بهتر می‌سازد.</div>
+          <div class="about-pattern" id="aboutPattern"></div>
+        </div>
+        <div class="about-counter">
+          <div class="about-counter-num">۵+</div>
+          <div class="about-counter-label">سال تجربه</div>
+        </div>
+      </div>
+      <div class="about-content reveal">
+        <div class="section-tag">درباره ما</div>
+        <h2 class="section-title">ما کی <span>هستیم؟</span></h2>
+        <p class="section-desc">نوشتار در سال ۱۳۹۸ با یک ایده ساده شروع شد: ایجاد فضایی که نویسندگان ایرانی بتوانند بدون محدودیت، افکار و تجربیاتشان را به اشتراک بگذارند.</p>
+        <div class="about-features">
+          <div class="feature-item">
+            <div class="feature-icon">✍️</div>
+            <div><div class="feature-title">ویرایشگر قدرتمند</div><div class="feature-desc">ابزارهای حرفه‌ای برای نوشتن محتوای بهتر</div></div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">👥</div>
+            <div><div class="feature-title">جامعه فعال</div><div class="feature-desc">ارتباط با هزاران نویسنده و خواننده</div></div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">📊</div>
+            <div><div class="feature-title">آمار دقیق</div><div class="feature-desc">بینش عمیق درباره مخاطبان شما</div></div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">💰</div>
+            <div><div class="feature-title">کسب درآمد</div><div class="feature-desc">از محتوای خود درآمد کسب کنید</div></div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🔒</div>
+            <div><div class="feature-title">حریم خصوصی</div><div class="feature-desc">کنترل کامل بر محتوا و داده‌هایتان</div></div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🌐</div>
+            <div><div class="feature-title">دسترسی آزاد</div><div class="feature-desc">از هر دستگاهی، هر زمانی</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="team-section reveal">
+      <div class="team-title">تیم ما</div>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-avatar ta-1">ع.م</div>
+          <div class="team-name">علی محمدی</div>
+          <div class="team-role">مدیر ارشد اجرایی</div>
+          <div class="team-socials">
+            <div class="team-social" onclick="showToast('🔗 پروفایل علی محمدی')">in</div>
+            <div class="team-social" onclick="showToast('🐦 توییتر علی محمدی')">𝕏</div>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar ta-2">ز.ک</div>
+          <div class="team-name">زهرا کریمی</div>
+          <div class="team-role">مدیر محصول</div>
+          <div class="team-socials">
+            <div class="team-social" onclick="showToast('🔗 پروفایل زهرا کریمی')">in</div>
+            <div class="team-social" onclick="showToast('🐦 توییتر زهرا کریمی')">𝕏</div>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar ta-3">پ.ن</div>
+          <div class="team-name">پیام نوری</div>
+          <div class="team-role">مدیر فنی</div>
+          <div class="team-socials">
+            <div class="team-social" onclick="showToast('🔗 پروفایل پیام نوری')">in</div>
+            <div class="team-social" onclick="showToast('🎮 گیت‌هاب پیام نوری')">gh</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<div class="newsletter">
+  <div class="newsletter-inner reveal">
+    <h2>مقالات <span>برگزیده</span> هر هفته در ایمیل شما</h2>
+    <p>به بیش از ۵۰,۰۰۰ خواننده بپیوندید که هر دوشنبه بهترین مطالب را دریافت می‌کنند.</p>
+    <div class="newsletter-form">
+
+        <form
+            method="POST"
+            action="{% url 'newsletter_subscribe' %}"
+            class="newsletter-form"
+        >
+
+            {% csrf_token %}
+
+            <input
+                    class="newsletter-input"
+                type="email"
+                name="email"
+                placeholder="ایمیل خود را وارد کنید..."
+                required
+            >
+
+            <button type="submit" class="newsletter-btn">
+                عضویت
+            </button>
+
+        </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

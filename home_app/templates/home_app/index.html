@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    خانه
+{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/css.css' %}">
+{% endblock %}
+{% block content %}
+<!-- ADD ARTICLE -->
+<section class="section" id="add-article">
+
+    <div class="section-inner">
+
+        <div class="section-tag reveal">
+            بنویسید
+        </div>
+
+        <h2 class="section-title reveal">
+            مقاله <span>جدید</span> اضافه کنید
+        </h2>
+
+        <p class="section-desc reveal">
+            ایده‌ها، تجربه‌ها و دانش خود را با جامعه نوشتار به اشتراک بگذارید.
+        </p>
+
+
+        <div class="add-form-wrapper reveal">
+
+          <form method="POST"
+      enctype="multipart/form-data"
+      action="{% url 'add_article' %}">
+
+    {% csrf_token %}
+
+    <!-- عنوان -->
+    <div class="form-group">
+
+        <label class="form-label">
+            عنوان مقاله *
+        </label>
+
+        <input
+            type="text"
+            name="title"
+            class="form-input"
+            placeholder="عنوانی جذاب و واضح انتخاب کنید..."
+            maxlength="90"
+            required
+        >
+
+    </div>
+
+          {% if form.title.errors %}
+    {% for error in form.title.errors %}
+        <div class="form-error">
+            {{ error }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+   <!-- دسته بندی -->
+<div class="form-group">
+
+    <label class="form-label">
+        دسته‌بندی *
+    </label>
+
+    <select
+        name="category"
+        class="form-select"
+        required>
+
+        <option value="">
+            انتخاب دسته‌بندی...
+        </option>
+
+        {% for category in categories %}
+
+            <option value="{{ category.id }}">
+                {{ category.title }}
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+</div>
+
+
+    <!-- متن مقاله -->
+    <div class="form-group">
+
+        <label class="form-label">
+            متن مقاله *
+        </label>
+
+        <textarea
+            name="body"
+            class="form-textarea"
+            placeholder="محتوای کامل مقاله را اینجا بنویسید..."
+            style="min-height:220px"
+            required></textarea>
+
+    </div>
+
+
+    <!-- تصویر -->
+    <div class="form-group">
+
+        <label class="form-label">
+            تصویر شاخص
+        </label>
+
+        <div class="upload-zone">
+
+            <div class="upload-icon">
+                🖼️
+            </div>
+
+            <p class="upload-text">
+                تصویر مقاله را انتخاب کنید
+                <br>
+                <strong>PNG، JPG، WEBP</strong>
+            </p>
+
+            <input
+                type="file"
+                name="image"
+                class="form-input"
+                accept="image/png,image/jpeg,image/webp">
+
+        </div>
+
+    </div>
+
+
+    <!-- دکمه -->
+    <div style="
+        display:flex;
+        gap:1rem;
+        align-items:center;
+        margin-top:0.5rem;
+    ">
+
+        <button
+            type="submit"
+            class="form-submit"
+            style="flex:1">
+
+            🚀 انتشار مقاله
+
+        </button>
+
+    </div>
+
+</form>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endblock %}

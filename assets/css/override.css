@@ -1,0 +1,9 @@
+@font-face{
+    font-family: "Yekan Bakh SemiBold";
+    src:url("../fonts/YekanBakh-SemiBold.woff");
+    font-weight:normal;
+    font-style: normal;
+}
+* {
+    font-family: "Yekan Bakh SemiBold";
+}

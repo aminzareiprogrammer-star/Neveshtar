@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+
+{% block hero_title %}
+مقالات
+{% endblock %}
+
+{% block hero_title1 %}
+{% endblock %}
+
+{% block hero_title2 %}
+{% endblock %}
+
+
+{% load static %}
+
+{% block title %}
+مقالات
+{% endblock %}
+
+
+{% block content %}
+
+<section class="section" id="articles">
+
+<div class="section-inner">
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+
+    <div class="articles-header">
+
+        <div>
+            <div class="section-tag reveal" id="category">
+                مقالات
+            </div>
+
+            <h2 class="section-title reveal">
+                آخرین <span>نوشته‌ها</span>
+            </h2>
+        </div>
+
+         <a href="{% url 'home' %}#add-article"
+   class="btn-primary reveal">
+    + مقاله جدید
+</a>
+
+
+
+    </div>
+
+
+<div class="article-search">
+
+    <form action="{% url 'blog:search' %}" method="GET">
+
+        <div class="article-search-box">
+
+            <input
+            class="article-search-input"
+            type="search"
+            name="q"
+            value="{{ query }}"
+            placeholder="جستجوی مقاله...">
+
+            <i class="fa-solid fa-magnifying-glass article-search-icon"></i>
+
+            <button
+            type="button"
+            class="article-clear">
+
+                ✕
+
+            </button>
+
+        </div>
+
+        <button class="article-search-btn">
+
+            جستجو
+
+        </button>
+
+    </form>
+
+</div>
+    <div class="filter-bar reveal" >
+
+
+        <a href="{% url 'blog:blog' %}" class="filter-btn">
+            همه
+        </a>
+
+
+        {% for category in categories %}
+
+        <a href="{% url 'blog:category' category.id %}" class="filter-btn">
+            {{ category.title }}
+        </a>
+
+        {% endfor %}
+
+
+    </div>
+
+
+
+
+    <div class="articles-grid" id="articlesGrid">
+
+
+        {% for article in articles %}
+
+
+        <div class="article-card reveal" data-cat="tech">
+
+
+            <div class="article-img">
+
+                {% if article.image %}
+    <img src="{{ article.image.url }}" alt="{{ article.title }}">
+{% endif %}
+
+
+                <span class="article-cat">
+                    {{ article.category.title }}
+                </span>
+
+            </div>
+
+
+
+            <div class="article-body">
+
+
+                <div class="article-meta">
+
+                    <span>
+                       {% load jalali %}
+
+{{ article.created|to_jalali }}
+                    </span>
+
+                    <div class="article-meta-dot"></div>
+
+                    <span>
+                        ۸ دقیقه
+                    </span>
+
+                </div>
+
+
+
+                <div class="article-title">
+
+                    <a href="{% url 'blog:article' slug=article.slug %}">
+                        {{ article.title }}
+                    </a>
+
+                </div>
+
+                <p class="article-excerpt">
+                    {{ article.body|truncatewords:17 }}
+                </p>
+
+                <div class="article-footer">
+
+
+                    <div class="author-mini">
+
+                        <div class="author-avatar avatar-1">
+                            ع.ا
+                        </div>
+
+
+                        <div class="author-name">
+                            {{ article.author }}
+                        </div>
+
+                    </div>
+
+
+
+                    <button class="read-more-btn">
+
+                        بیشتر بخوانید →
+
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+        {% endfor %}
+
+
+
+    </div>
+
+
+
+
+
+    <!-- Pagination -->
+
+    <div class="pagination">
+
+
+        {% if articles.has_previous %}
+
+        <a href="?q={{ query }}&page={{ articles.next_page_number }}">
+    صفحه بعد
+</a>
+
+            <i class="fa-solid fa-angle-right"></i>
+
+        </a>
+
+        {% endif %}
+
+
+
+
+        {% for page in articles.paginator.page_range %}
+
+
+            {% if page == articles.number %}
+
+
+            <span class="page-btn active">
+                {{ page }}
+            </span>
+
+
+            {% else %}
+
+
+            <a href="?page={{ page }}" class="page-btn">
+                {{ page }}
+            </a>
+
+
+            {% endif %}
+
+
+        {% endfor %}
+
+        {% if articles.has_next %}
+
+
+        <a href="?page={{ articles.next_page_number }}"
+        class="page-btn">
+
+            <i class="fa-solid fa-angle-left"></i>
+        </a>
+
+        {% endif %}
+
+    </div>
+</div>
+</section>
+{% endblock %}

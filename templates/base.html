@@ -1,0 +1,603 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %} {% endblock %}</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static "css/css.css" %}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header>
+<nav id="navbar">
+  <div class="nav-inner">
+    <div class="logo" onclick="scrollToSection('hero')">نوشتار</div>
+    <ul class="nav-links">
+            <li><a href="{% url 'home' %}" onclick="scrollToSection('add-article')">خانه</a></li>
+      <li><a href="{% url 'blog:blog' %}" onclick="scrollToSection('articles')">مقالات</a></li>
+      <li><a href="{% url 'about' %}" onclick="scrollToSection('about')">درباره ما</a></li>
+      <li><a href="{% url 'blog:contact' %}" onclick="scrollToSection('contact')">تماس با ما</a></li>
+    </ul>
+<div class="nav-btns">
+    {% if request.user.is_authenticated %}
+
+    <!-- Profile trigger -->
+    <div class="user-trigger" id="userTrigger" onclick="toggleDropdown()">
+
+        <div class="user-avatar">
+            <img src="{{ request.user.profile.image.url }}"
+                 alt="{{ request.user.first_name }}"
+                 onerror="this.style.display='none';this.parentElement.querySelector('.avatar-fallback').style.display='flex'">
+
+            <span class="avatar-fallback"
+                  style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-size:.8rem;font-weight:700">
+                {{ request.user.first_name|slice:":1" }}
+            </span>
+
+            <div class="user-avatar-ring"></div>
+            <div class="user-avatar-status"></div>
+        </div>
+
+        <div class="user-info">
+            <div class="user-name">
+                {{ request.user.get_full_name|default:request.user.username }}
+            </div>
+            <div class="user-role">
+                👋 خوش آمدید
+            </div>
+        </div>
+
+        <span class="user-chevron">▼</span>
+
+    </div>
+
+    <!-- Dropdown -->
+    <div class="user-dropdown" id="userDropdown">
+
+        <!-- Header -->
+        <div class="dropdown-header">
+
+            <div class="dropdown-avatar">
+                <img src="{{ request.user.profile.image.url }}"
+                     alt="{{ request.user.first_name }}"
+                     onerror="this.style.display='none';this.parentElement.textContent='{{ request.user.first_name|slice:":1" }}'">
+            </div>
+
+            <div>
+                <div class="dropdown-user-name">
+                    {{ request.user.get_full_name|default:request.user.username }}
+                </div>
+
+                <div class="dropdown-user-email">
+                    {{ request.user.email }}
+                </div>
+
+                <span class="dropdown-user-badge">
+                    ⭐ عضو سایت
+                </span>
+            </div>
+
+        </div>
+
+        <!-- Stats -->
+        <div class="dropdown-stats">
+
+            <div class="dropdown-stat">
+                <div class="dropdown-stat-num">
+                    {{ request.user.article_set.count }}
+                </div>
+                <div class="dropdown-stat-label">
+                    مقاله
+                </div>
+            </div>
+
+            <div class="dropdown-stat">
+                <div class="dropdown-stat-num">
+                    --
+                </div>
+                <div class="dropdown-stat-label">
+                    بازدید
+                </div>
+            </div>
+
+            <div class="dropdown-stat">
+                <div class="dropdown-stat-num">
+                    --
+                </div>
+                <div class="dropdown-stat-label">
+                    دنبال‌کننده
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Menu -->
+        <div class="dropdown-menu">
+
+
+
+            <a href="#" class="dropdown-item" onclick="openModal('edit')">
+    <span class="dropdown-item-icon">✏️</span>
+    ویرایش اطلاعات
+</a>
+            <a href="{% url 'blog:blog' %}?my_articles=1" class="dropdown-item">
+                <span class="dropdown-item-icon">📋</span>
+                مقالات من
+            </a>
+            <div class="dropdown-sep"></div>
+
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="dropdown-logout">
+                    <span class="dropdown-item-icon">🚪</span>
+                    خروج از حساب
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+      {% else %}
+      <button class="btn-login" style="flex:1" onclick="openModal('login');toggleMobile()">ورود</button>
+      <button class="btn-register" onclick="openModal('register')">ثبت‌نام</button>
+      {% endif %}
+
+    </div>
+    <div class="hamburger" onclick="toggleMobile()" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#" onclick="scrollToSection('articles');toggleMobile()">📰 مقالات</a>
+  <a href="#" onclick="scrollToSection('add-article');toggleMobile()">✏️ نوشتن مقاله</a>
+  <a href="#" onclick="scrollToSection('about');toggleMobile()">👥 درباره ما</a>
+  <a href="#" onclick="scrollToSection('contact');toggleMobile()">📞 تماس</a>
+  <div class="mobile-menu-btns">
+      {% if request.user.is_authenticated %}
+      <button class="btn-login" style="flex:1" onclick="openModal('login');toggleMobile()">{{ request.user.first_name }}</button>
+      {% else %}
+      <button class="btn-login" style="flex:1" onclick="openModal('login');toggleMobile()">ورود</button>
+      {% endif %}
+    <button class="btn-register" style="flex:1" onclick="openModal('register');toggleMobile()">ثبت‌نام</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge"><span class="dot"></span> جدیدترین مقالات منتشر شد</div>
+      <h1 class="hero-title">{% block hero_title1 %}جایی برای{% endblock %} <span>{% block hero_title2 %}نوشتن{% endblock %}</span> {% block hero_title %}و خواندن داستان‌های واقعی{% endblock %}</h1>
+      <p class="hero-desc"> نوشتار پلتفرمی است برای نویسندگان ایرانی که می‌خواهند ایده‌هایشان را با جهان به اشتراک بگذارند. بنویسید، منتشر کنید، الهام بگیرید.  </p>
+      <div class="hero-actions">
+
+          <a href="{% url 'blog:blog' %}#articles" class="btn-primary">
+              🔥آخرین مقالات
+          </a>
+          <a href="{% url 'home' %}#add-article" class="btn-ghost">
+    شروع به نوشتن ←
+</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">۱۲<span>K</span></div><div class="stat-label">نویسنده فعال</div></div>
+        <div class="stat"><div class="stat-num">۴۸<span>K</span></div><div class="stat-label">مقاله منتشر شده</div></div>
+        <div class="stat"><div class="stat-num">۲<span>M</span></div><div class="stat-label">خواننده ماهانه</div></div>
+      </div>
+    </div>
+  <div class="hero-visual">
+    <div class="hero-card-stack">
+
+        {% for article in recent|slice:":3" %}
+        <div class="h-card h-card-{{ forloop.counter }}">
+            <div class="h-card-inner">
+
+                <div class="h-card-dots">
+                    <span class="dot-r"></span>
+                    <span class="dot-y"></span>
+                    <span class="dot-g"></span>
+                </div>
+
+                <div class="h-card-tag">🔥 داغ</div>
+
+                <div class="h-card-title">
+                    <a href="{% url 'blog:article' slug=article.slug %}">
+                        {{ article.title }}
+                    </a>
+                </div>
+
+                <div class="h-card-meta">
+                    <span>{{ article.author }}</span>
+                    <span>·</span>
+                    <span>۸ دقیقه مطالعه</span>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+</section>
+</header>
+
+{% block content %}
+
+
+{% endblock %}
+
+
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">نوشتار</div>
+        <p class="footer-brand-desc">نوشتار پلتفرمی برای نویسندگان و خوانندگان ایرانی است. جایی که ایده‌ها زندگی می‌کنند و داستان‌ها به اشتراک گذاشته می‌شوند.</p>
+        <div class="footer-socials" style="margin-top:1.5rem">
+          <div class="footer-social" onclick="showToast('📸 اینستاگرام نوشتار')">📸</div>
+          <div class="footer-social" onclick="showToast('🐦 توییتر نوشتار')">𝕏</div>
+          <div class="footer-social" onclick="showToast('💬 تلگرام نوشتار')">✈️</div>
+          <div class="footer-social" onclick="showToast('💼 لینکدین نوشتار')">in</div>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">صفحات</div>
+        <ul class="footer-links">
+          <li><a href="{% url 'home' %}" onclick="scrollToSection('hero')">خانه</a></li>
+          <li><a href="{% url 'blog:blog' %}" onclick="scrollToSection('articles')">مقالات</a></li>
+          <li><a href="{% url 'about' %}" onclick="scrollToSection('about')">درباره ما</a></li>
+          <li><a href="{% url 'blog:contact' %}" onclick="scrollToSection('contact')">تماس با ما</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">دسته‌بندی‌ها</div>
+        <ul class="footer-links">
+            {% for category in categories %}
+    <li>
+        <a href="{% url 'blog:category' category.id %}#category">
+            {{ category.title }}
+        </a>
+    </li>
+{% endfor %}
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">پشتیبانی</div>
+        <ul class="footer-links">
+             <li>
+    <a href="{% url 'faq' %}" onclick="showToast('📋 سوالات متداول')">
+        سوالات متداول
+    </a>
+</li>
+
+<li>
+    <a href="{% url 'privacy' %}" onclick="showToast('🔒 حریم خصوصی')">
+        حریم خصوصی
+    </a>
+</li>
+
+<li>
+    <a href="{% url 'terms' %}" onclick="showToast('📄 شرایط استفاده')" >
+        شرایط استفاده
+    </a>
+</li>
+          <li><a href="#" onclick="openModal('login')">ورود به حساب</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© ۱۴۰۳ نوشتار — ساخته شده با ❤️ در ایران</div>
+      <div class="footer-copy">تمام حقوق محفوظ است</div>
+    </div>
+  </div>
+</footer>
+
+<!-- SCROLL TOP -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon">✨</div>
+  <span id="toastMsg"></span>
+  <div class="toast-bar" id="toastBar"></div>
+</div>
+
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+
+        <div class="modal">
+            <button type="button" class="modal-close" onclick="closeModal('login')">×</button>
+
+            <div class="modal-logo">نوشتار</div>
+            <div class="modal-title">خوش برگشتید 👋</div>
+            <div class="modal-sub">برای ادامه وارد حساب خود شوید</div>
+            <div class="social-login">
+                <button type="button" class="social-btn" onclick="showToast('🔗 ورود با گوگل')">
+                    🔵 گوگل
+                </button>
+            </div>
+
+            <div class="modal-divider">
+                <span>یا با ایمیل</span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">نام کاربری</label>
+                <input
+                    class="form-input"
+                    type="text"
+                    name="username"
+                    id="login_name"
+                    placeholder="نام کاربری..."
+                    required>
+                {{ form.username }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">رمز عبور</label>
+                <div class="password-wrapper">
+                    <input
+                        class="form-input"
+                        type="password"
+                        name="password"
+                        id="loginPass"
+                        placeholder="رمز عبور..."
+                        style="width:390px"
+                        required>
+                    {{ form.password}}
+
+                    <button type="button"
+                            class="toggle-pw"
+                            onclick="togglePassword('loginPass',this)">
+                        👁
+                    </button>
+                </div>
+            </div>
+
+            <div style="text-align:left;margin-bottom:1.5rem">
+                <a href="#"
+                   style="font-size:0.85rem;color:var(--orange)"
+                   onclick="showToast('📧 لینک بازیابی ارسال شد')">
+                    فراموش کردید؟
+                </a>
+            </div>
+
+            <button type="submit"
+                    class="form-submit"
+                    onclick="return submitLogin()">
+                ورود به حساب ←
+            </button>
+
+            <div class="modal-switch">
+                حساب ندارید؟
+                <a onclick="switchModal('login','register')">
+                    ثبت‌نام کنید
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Edit MODAL -->
+<div class="modal-overlay" id="editModal">
+    <form action="{% url 'edit' %}" method="post">
+        {% csrf_token %}
+
+        <div class="modal">
+            <button type="button"
+                    class="modal-close"
+                    onclick="closeModal('edit')">×</button>
+
+            <div class="modal-logo">نوشتار</div>
+            <div class="modal-title">ویرایش اطلاعات</div>
+
+            {{ edit_form.as_p }}
+
+            <button type="submit" class="form-submit">
+                ذخیره تغییرات ←
+            </button>
+        </div>
+    </form>
+</div>
+
+
+
+```html
+<!-- REGISTER MODAL -->
+<div class="modal-overlay" id="registerModal">
+
+    <form method="post" action="{% url 'register' %}">
+        {% csrf_token %}
+
+        <div class="modal">
+
+            <button
+                type="button"
+                class="modal-close"
+                onclick="closeModal('register')">
+                ×
+            </button>
+
+            <div class="modal-logo">نوشتار</div>
+
+            <div class="modal-title">
+                به خانواده بپیوندید 🎉
+            </div>
+
+            <div class="modal-sub">
+                حساب جدید بسازید و شروع به نوشتن کنید
+            </div>
+
+            <!-- نام و نام خانوادگی -->
+            <div class="form-row">
+
+                <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">نام</label>
+
+                    <input
+                        class="form-input"
+                        type="text"
+                        name="first_name"
+                        placeholder="نام..."
+                    >
+                </div>
+
+                <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">نام خانوادگی</label>
+
+                    <input
+                        class="form-input"
+                        type="text"
+                        name="last_name"
+                        placeholder="نام خانوادگی..."
+                    >
+                </div>
+
+            </div>
+
+            <!-- نام کاربری -->
+            <div class="form-group" style="margin-top:1.25rem">
+
+                <label class="form-label">
+                    نام کاربری
+                </label>
+
+                <input
+                    class="form-input"
+                    type="text"
+                    name="username"
+                    placeholder="نام کاربری..."
+                >
+
+            </div>
+
+            <!-- ایمیل -->
+            <div class="form-group" style="margin-top:1.25rem">
+
+                <label class="form-label">
+                    ایمیل
+                </label>
+
+                <input
+                    class="form-input"
+                    type="email"
+                    name="email"
+                    placeholder="email@example.com"
+                >
+
+            </div>
+
+            <!-- رمز عبور -->
+            <div class="form-group">
+
+                <label class="form-label">
+                    رمز عبور
+                </label>
+
+                <div class="password-wrapper">
+
+                    <input
+                        class="form-input"
+                        type="password"
+                        name="password"
+                        placeholder="حداقل ۸ کاراکتر..."
+                        id="regPass"
+                        style="width:100%"
+                        oninput="checkStrength(this.value)"
+                    >
+
+                    <button
+                        type="button"
+                        class="toggle-pw"
+                        onclick="togglePassword('regPass',this)">
+                        👁
+                    </button>
+
+                </div>
+
+                <div class="strength-bar">
+                    <div class="strength-seg" id="s1"></div>
+                    <div class="strength-seg" id="s2"></div>
+                    <div class="strength-seg" id="s3"></div>
+                    <div class="strength-seg" id="s4"></div>
+                </div>
+
+                <div class="strength-text" id="strengthText">
+                    قدرت رمز عبور
+                </div>
+
+            </div>
+
+            <!-- قوانین -->
+            <div
+                class="checkbox-row"
+                style="margin-bottom:1.5rem">
+
+                <input
+                    type="checkbox"
+                    id="agreeTerms"
+                    required
+                >
+
+                <label for="agreeTerms">
+                    با
+                    <a href="#">
+                        شرایط استفاده
+                    </a>
+                    و
+                    <a href="#">
+                        حریم خصوصی
+                    </a>
+                    موافقم
+                </label>
+
+            </div>
+
+            <!-- ثبت نام -->
+            <button
+                type="submit"
+                class="form-submit">
+                ساخت حساب رایگان 🚀
+            </button>
+
+            <!-- رفتن به Login -->
+            <div class="modal-switch">
+                قبلاً ثبت‌نام کرده‌اید؟
+                <a onclick="switchModal('register','login')">
+                    وارد شوید
+                </a>
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+ <script src="{% static "JS/JS.js" %}"></script>
+{% if messages %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    {% for message in messages %}
+        showToast("{{ message }}");
+    {% endfor %}
+});
+</script>
+{% endif %}
+</body>
+</html>

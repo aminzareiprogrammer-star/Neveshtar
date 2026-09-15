@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% block hero_title %}
+سوالات متداول
+{% endblock %}
+{% block hero_title1 %}
+{% endblock %}
+
+{% block hero_title2 %}
+{% endblock %}
+
+
+{% load static %}
+
+{% block title %}
+    سوالات متداول
+{% endblock %}
+
+{% block content %}
+
+<section class="legal-page">
+
+    <div class="legal-container">
+
+        <div class="legal-header">
+
+            <span class="section-tag">
+                راهنمای نویشتار
+            </span>
+
+            <h1 class="legal-title">
+                سوالات <span>متداول</span>
+            </h1>
+
+            <p class="legal-description">
+                پاسخ پرسش‌های متداول درباره نویشتار،
+                حساب کاربری، مقالات و نحوه استفاده از سایت.
+            </p>
+
+        </div>
+
+
+        <div class="faq-list">
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>
+                        نویشتار چیست؟
+                    </h3>
+
+                    <span class="faq-icon">
+                        +
+                    </span>
+                </div>
+
+                <div class="faq-answer">
+                    <p>
+                        نویشتار بستری برای مطالعه، انتشار و به اشتراک‌گذاری
+                        مقالات و مطالب آموزشی، علمی و فناوری است.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>
+                        چگونه می‌توانم در نویشتار مقاله منتشر کنم؟
+                    </h3>
+
+                    <span class="faq-icon">
+                        +
+                    </span>
+                </div>
+
+                <div class="faq-answer">
+                    <p>
+                        ابتدا وارد حساب کاربری خود شوید و سپس از بخش
+                        افزودن مقاله، مقاله جدید خود را ایجاد و منتشر کنید.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>
+                        آیا برای مطالعه مقالات باید ثبت‌نام کنم؟
+                    </h3>
+
+                    <span class="faq-icon">
+                        +
+                    </span>
+                </div>
+
+                <div class="faq-answer">
+                    <p>
+                        خیر. مطالعه مقالات برای همه کاربران آزاد است.
+                        برای امکاناتی مانند انتشار مقاله و تعامل با محتوا
+                        ممکن است نیاز به ورود به حساب کاربری داشته باشید.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>
+                        چگونه می‌توانم حساب کاربری ایجاد کنم؟
+                    </h3>
+
+                    <span class="faq-icon">
+                        +
+                    </span>
+                </div>
+
+                <div class="faq-answer">
+                    <p>
+                        از طریق گزینه ثبت‌نام در سایت می‌توانید حساب کاربری
+                        خود را ایجاد کنید.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>
+                        آیا می‌توانم مقاله خود را ویرایش کنم؟
+                    </h3>
+
+                    <span class="faq-icon">
+                        +
+                    </span>
+                </div>
+
+                <div class="faq-answer">
+                    <p>
+                        بله. در صورت وجود امکان ویرایش برای مقاله،
+                        می‌توانید اطلاعات مقاله خود را از حساب کاربری
+                        مدیریت و اصلاح کنید.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>
+                        چگونه عضو مقالات برگزیده شوم؟
+                    </h3>
+
+                    <span class="faq-icon">
+                        +
+                    </span>
+                </div>
+
+                <div class="faq-answer">
+                    <p>
+                        در صفحه درباره ما، بخش عضویت در مقالات برگزیده،
+                        ایمیل خود را وارد کنید تا در فهرست اعضا قرار بگیرید.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3>
+                        چگونه با نویشتار تماس بگیرم؟
+                    </h3>
+
+                    <span class="faq-icon">
+                        +
+                    </span>
+                </div>
+
+                <div class="faq-answer">
+                    <p>
+                        از طریق صفحه تماس با ما می‌توانید پیام خود را
+                        برای تیم نویشتار ارسال کنید.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<script>
+    document.querySelectorAll(".faq-question").forEach(question => {
+
+        question.addEventListener("click", () => {
+
+            const item = question.parentElement;
+
+            document.querySelectorAll(".faq-item").forEach(otherItem => {
+
+                if (otherItem !== item) {
+                    otherItem.classList.remove("active");
+                }
+
+            });
+
+            item.classList.toggle("active");
+
+        });
+
+    });
+</script>
+{% endblock %}
+

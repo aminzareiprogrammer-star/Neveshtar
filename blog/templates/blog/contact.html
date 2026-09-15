@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block hero_title %}
+تماس با ما
+{% endblock %}
+
+{% block hero_title1 %}
+{% endblock %}
+
+{% block hero_title2 %}
+{% endblock %}
+
+
+{% load static %}
+
+{% block title %}
+تماس با ما
+{% endblock %}
+
+
+{% block content %}
+
+<section class="section" id="contact">
+<link rel="stylesheet" href="{% static "css/css.css" %}">
+  <div class="section-inner">
+    <div class="section-tag reveal">تماس</div>
+    <h2 class="section-title reveal">با ما در <span>ارتباط</span> باشید</h2>
+    <p class="section-desc reveal">سوال، پیشنهاد یا همکاری دارید؟ منتظر پیامتان هستیم.</p>
+
+    <div class="contact-grid">
+      <div class="contact-info-cards reveal-left">
+        <div class="contact-card">
+          <div class="contact-card-icon">📧</div>
+          <div><div class="contact-card-title">ایمیل</div><div class="contact-card-val">hello@neveshtaar.ir</div></div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-icon">📱</div>
+          <div><div class="contact-card-title">تلفن</div><div class="contact-card-val">۰۲۱-۱۲۳۴۵۶۷۸</div></div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-icon">📍</div>
+          <div><div class="contact-card-title">آدرس</div><div class="contact-card-val">تهران، خیابان ولیعصر، پلاک ۱۲۳</div></div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-icon">⏰</div>
+          <div><div class="contact-card-title">ساعت کاری</div><div class="contact-card-val">شنبه تا پنجشنبه، ۹ تا ۱۸</div></div>
+        </div>
+      </div>
+
+      <form method="post">
+    {% csrf_token %}
+
+    <div class="contact-form reveal">
+        <div class="contact-form-title">پیام بفرستید</div>
+        <div class="contact-form-sub">معمولاً ظرف ۲۴ ساعت پاسخ می‌دهیم.</div>
+
+        <div class="form-row">
+            <div class="form-group" style="margin-bottom:0">
+                <label class="contact-card-title">نام و نام خانوادگی</label>
+
+                {{ form.name }}
+            </div>
+
+            <div class="form-group" style="margin-bottom:0">
+                <label class="contact-card-title">ایمیل</label>
+
+                {{ form.email }}
+            </div>
+        </div>
+
+        <div class="form-group" style="margin-top:1.25rem">
+            <label class="contact-card-title">موضوع</label>
+
+            {{ form.subject }}
+        </div>
+
+        <div class="form-group">
+            <d class="contact-card-title">پیام</d>
+
+            {{ form.text }}
+        </div>
+
+        <button type="submit" class="form-submit">
+            📨 ارسال پیام
+        </button>
+
+    </div>
+</form>
+</div>
+      </div>
+</section>
+{% endblock %}

@@ -1,0 +1,869 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نوشتار | جزئیات مقاله</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static "css/css-article.css" %}">
+</head>
+<body>
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <div class="logo">نوشتار</div>
+    <a class="nav-back" href="{% url 'blog:blog' %}">← بازگشت به مقالات</a>
+
+
+
+  </div>
+  <div class="nav-read-progress"><div class="nav-read-progress-fill" id="readProgress"></div></div>
+</nav>
+
+<!-- HERO -->
+<div class="article-hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+
+  <div class="article-hero-inner">
+    <div class="article-breadcrumb">
+      <a href="{% url 'home' %}">خانه</a>
+      <span class="sep">›</span>
+      <a href="{% url 'blog:blog' %}">مقالات</a>
+      <span class="sep">›</span>
+      <span class="current">{{ article.category }}</span>
+    </div>
+
+    <div class="article-cat-badge">🤖 {{ article.category }}</div>
+    <h1 class="article-title">{{ article.title }}</h1>
+
+    <p class="article-excerpt-hero">
+      {{ article.body|truncatewords:17 }}    </p>
+
+    <div class="article-meta-bar">
+      <div class="meta-author">
+        <div class="meta-avatar">ع.ا</div>
+        <div class="meta-author-info">
+          <div class="meta-author-name">{{ article.author }}</div>
+          <div class="meta-author-bio">نویسنده و پژوهشگر فناوری</div>
+        </div>
+      </div>
+
+      <div class="meta-divider"></div>
+
+      <div class="meta-item">
+        <div class="meta-label">تاریخ انتشار</div>
+        <div class="meta-value">{% load jalali %}
+
+{{ article.created|to_jalali }}</div>
+      </div>
+
+      <div class="meta-divider"></div>
+
+      <div class="meta-item">
+        <div class="meta-label">زمان مطالعه</div>
+        <div class="meta-value">۸ دقیقه ☕</div>
+      </div>
+
+      <div class="meta-divider"></div>
+
+      <div class="meta-item">
+        <div class="meta-label">بازدید</div>
+        <div class="meta-value">۱۲,۴۸۰ نفر</div>
+      </div>
+
+      <div class="article-actions">
+ <form method="POST"
+      action="{% url 'blog:like' article.slug article.id %}"
+      class="like-form">
+
+    {% csrf_token %}
+
+    <button type="submit" class="action-btn" id="likeButton">
+        ❤️
+        <span id="likeCount">{{ article.likes.count }}</span>
+    </button>
+
+</form>
+        <button class="action-btn" onclick="showToast('🔖 مقاله ذخیره شد')">🔖 ذخیره</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURED IMAGE -->
+<div class="featured-img-wrap">
+  <div class="featured-img">
+    <div class="img-pattern"></div>
+    <div class="featured-img-icon">{% if article.image %}
+    <img src="{{ article.image.url }}" alt="{{ article.title }}">
+{% endif %}
+    <div class="featured-img-caption">تصویر: آینده همکاری انسان و ماشین — نوشتار، ۱۴۰۳</div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="article-layout">
+
+  <!-- ARTICLE BODY -->
+  <main class="article-body">
+
+
+    <!-- Content -->
+    <div class="article-content">
+
+            <h2 id="s1">{{ article.title }}</h2>
+
+      <p>{{ article.body }}</p>
+
+      </div>
+    <!-- Tags -->
+    <div class="article-tags">
+      <span class="article-tags-title">برچسب‌ها:</span>
+      <span class="tag-chip">#هوش_مصنوعی</span>
+      <span class="tag-chip">#خلاقیت</span>
+      <span class="tag-chip">#هنر</span>
+      <span class="tag-chip">#آینده</span>
+      <span class="tag-chip">#فناوری</span>
+    </div>
+
+    <!-- Share -->
+    <div class="share-section">
+      <div class="share-title">این مقاله را به اشتراک بگذارید</div>
+      <div class="share-sub">اگر این مقاله برایتان مفید بود، با دیگران هم به اشتراک بگذارید.</div>
+      <div class="share-btns">
+        <button class="share-btn" onclick="showToast('📤 لینک در تلگرام کپی شد')">✈️ تلگرام</button>
+        <button class="share-btn" onclick="showToast('📤 لینک در توییتر به اشتراک گذاشته شد')">𝕏 توییتر</button>
+        <button class="share-btn" onclick="showToast('📤 لینک در واتساپ ارسال شد')">💬 واتساپ</button>
+        <button class="share-btn" onclick="showToast('📤 لینک در لینکدین به اشتراک گذاشته شد')">in لینکدین</button>
+      </div>
+      <div class="share-link-box">
+        <input class="share-link-input" id="articleLink" value="https://neveshtaar.ir/article/ai-creativity" readonly>
+        <button class="share-copy-btn" onclick="copyLink()">کپی لینک</button>
+      </div>
+    </div>
+
+    <!-- Author card -->
+    <div class="author-full-card">
+      <div class="author-full-avatar">ع.ا</div>
+      <div>
+        <div class="author-full-name">علی احمدی</div>
+        <div class="author-full-role">نویسنده و پژوهشگر فناوری</div>
+        <div class="author-full-bio">علی بیش از ۸ سال در حوزه فناوری و هوش مصنوعی می‌نویسد. او فارغ‌التحصیل کارشناسی ارشد علوم کامپیوتر از دانشگاه تهران است و مقالاتش در بیش از ۱۵ نشریه فارسی‌زبان منتشر شده.</div>
+        <button class="author-follow-btn" onclick="showToast('👤 دنبال کردید: علی احمدی')">+ دنبال کردن</button>
+      </div>
+    </div>
+
+    <!-- Comments -->
+    <div class="comments-section" id="commentsSection">
+
+      <div class="comments-header">
+        <div class="comments-title">نظرات <span class="cnt-badge" id="commentCount">۳</span></div>
+        <div class="comments-sort">
+          <button class="sort-btn active" onclick="sortComments(this,'newest')">جدیدترین</button>
+          <button class="sort-btn" onclick="sortComments(this,'popular')">محبوب‌ترین</button>
+        </div>
+      </div>
+
+      <!-- Main comment form -->
+      <form class="comment-form" method="post" action="{% url 'blog:article' article.slug %}">
+        {% csrf_token %}
+        <div class="comment-form-header">
+          <div class="cf-avatar"></div>
+          <div>
+            <div class="cf-label">نظر خود را بنویسید</div>
+            <div class="cf-sublabel">{{ request.user.get_full_name }}</div>
+          </div>
+        </div>
+        <div class="textarea-wrap">
+          <textarea class="comment-textarea" id="commentText" name="text" required
+            placeholder="نظر، سوال یا پیشنهاد خود را بنویسید..."
+            oninput="updateCharCount(this,'mainCount',500)"></textarea>
+          <span class="char-indicator" id="mainCount">۰/۵۰۰</span>
+        </div>
+        <div class="emoji-picker-row" id="mainEmojiRow">
+          <span class="emoji-pick" onclick="insertEmoji('commentText','😊')">😊</span>
+          <span class="emoji-pick" onclick="insertEmoji('commentText','👍')">👍</span>
+          <span class="emoji-pick" onclick="insertEmoji('commentText','🔥')">🔥</span>
+          <span class="emoji-pick" onclick="insertEmoji('commentText','💡')">💡</span>
+          <span class="emoji-pick" onclick="insertEmoji('commentText','❤️')">❤️</span>
+          <span class="emoji-pick" onclick="insertEmoji('commentText','🙌')">🙌</span>
+          <span class="emoji-pick" onclick="insertEmoji('commentText','🤔')">🤔</span>
+          <span class="emoji-pick" onclick="insertEmoji('commentText','✨')">✨</span>
+          <span class="emoji-pick" onclick="insertEmoji('commentText','👏')">👏</span>
+          <span class="emoji-pick" onclick="insertEmoji('commentText','😂')">😂</span>
+          <span class="emoji-pick" onclick="insertEmoji('commentText','🎯')">🎯</span>
+          <span class="emoji-pick" onclick="insertEmoji('commentText','💯')">💯</span>
+        </div>
+        <div class="comment-form-toolbar">
+          <button type="button" class="toolbar-btn" title="ایموجی" onclick="toggleEmojiRow('mainEmojiRow')">😊</button>
+          <button type="button" class="toolbar-btn" title="بولد" onclick="wrapText('commentText','**','**')"><b>B</b></button>
+          <button type="button" class="toolbar-btn" title="ایتالیک" onclick="wrapText('commentText','_','_')"><i>I</i></button>
+          <button type="button" class="toolbar-btn" title="لینک" onclick="insertEmoji('commentText','🔗 ')">🔗</button>
+          <button type="button" class="toolbar-btn" title="نقل‌قول" onclick="wrapText('commentText','> ','')">❝</button>
+          <button type="submit" class="comment-submit" id="mainSubmitBtn">ارسال نظر ←</button>
+        </div>
+      </form>
+
+      <!-- Comment list -->
+      <div class="comment-list" id="commentList">
+
+        <!-- PINNED comment -->
+        <div class="comment-item pinned" id="c-pinned">
+          <div class="comment-avatar ca-1" style="position:relative">
+
+            <span class="online-dot"></span>
+          </div>
+          <div class="comment-body">
+            <div class="comment-header">
+              <span class="comment-name">علی احمدی</span>
+              <span class="comment-author-badge">✍️ نویسنده</span>
+              <span class="pin-badge">📌 پین شده</span>
+              <span class="comment-date">۱۵ خرداد ۱۴۰۳</span>
+            </div>
+            <div class="comment-text">
+              ممنون که این مقاله رو خوندید! اگه سوال یا نظری دارید خوشحال می‌شم در قسمت کامنت‌ها باهاتون صحبت کنم. منتظر دیدگاه‌های شما هستم 🙌
+            </div>
+            <div class="comment-reactions">
+              <button class="reaction-btn" onclick="toggleReact(this,'❤️',47)">❤️ <span>۴۷</span></button>
+              <button class="reaction-btn" onclick="toggleReact(this,'👍',23)">👍 <span>۲۳</span></button>
+              <button class="reaction-btn" onclick="toggleReact(this,'🔥',15)">🔥 <span>۱۵</span></button>
+              <span class="comment-action-sep">·</span>
+              <button class="c-action-btn reply-btn" onclick="openReplyForm('pinned')">↩ پاسخ</button>
+            </div>
+            <!-- Reply form for pinned (demo comment, not stored in DB) -->
+            <div class="reply-form-wrap" id="reply-form-pinned">
+              <div class="reply-form-inner">
+                <div class="reply-form-label">
+                  ↩ پاسخ به علی احمدی
+                  <button type="button" onclick="closeReplyForm('pinned')">×</button>
+                </div>
+                <textarea class="reply-textarea" id="reply-text-pinned" placeholder="پاسخ خود را بنویسید..."></textarea>
+                <div class="reply-form-footer">
+                  <button type="button" class="reply-cancel" onclick="closeReplyForm('pinned')">انصراف</button>
+                  <button type="button" class="reply-submit" onclick="showToast('این نظر یک نمونه ثابت است')">ارسال پاسخ</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+       {% for comment in article.comments.all %}
+    {% if comment.parent == None %}
+
+    <div class="comment-item" id="c-{{ comment.id }}">
+        <div class="comment-avatar ca-2"></div>
+
+        <div class="comment-body">
+
+            <div class="comment-header">
+                <span class="comment-name">{{ comment.user.get_full_name }}</span>
+                <span class="comment-date">{{ comment.created }}</span>
+
+                <div class="comment-menu">
+                    <button class="comment-menu-btn"
+                            onclick="toggleCommentMenu('menu-{{ comment.id }}')">
+                        ⋯
+                    </button>
+
+                    <div class="comment-menu-popup"
+                         id="menu-{{ comment.id }}">
+                        <div class="cmp-item"
+                             onclick="showToast('🔗 لینک کپی شد');closeAllMenus()">
+                            🔗 کپی لینک
+                        </div>
+
+                        <div class="cmp-item"
+                             onclick="showToast('🚩 گزارش ثبت شد');closeAllMenus()">
+                            🚩 گزارش
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comment-text">
+                {{ comment.text }}
+            </div>
+
+            <div class="comment-reactions">
+
+                <form class="comment-like-form"
+      action="{% url 'blog:like_comment' comment.id %}"
+      method="POST">
+
+    {% csrf_token %}
+
+    <button type="submit"
+            class="reaction-btn comment-like-button">
+
+        ❤️ <span class="comment-like-count">
+            {{ comment.likes.count }}
+        </span>
+
+    </button>
+
+</form>
+
+                <button class="reaction-btn"
+                        onclick="toggleReact(this,'👍',5)">
+                    👍 <span>۵</span>
+                </button>
+
+                <span class="comment-action-sep">·</span>
+
+                <button class="c-action-btn reply-btn"
+                        onclick="openReplyForm('{{ comment.id }}')">
+                    ↩ پاسخ
+                </button>
+
+                {% if comment.replies.count %}
+                    <button class="show-replies-btn"
+                            id="show-replies-{{ comment.id }}"
+                            onclick="toggleReplies('{{ comment.id }}')">
+                        ▼ {{ comment.replies.count }} پاسخ
+                    </button>
+                {% endif %}
+
+            </div>
+
+            <!-- Replies -->
+            <div class="replies-wrap"
+                 id="replies-{{ comment.id }}"
+                 style="display:none;">
+
+                {% for reply in comment.replies.all %}
+
+                <div class="reply-item">
+
+                    <div class="reply-avatar ca-4">م.ت</div>
+
+                    <div class="reply-body">
+
+                        <div class="reply-header">
+                            <span class="reply-name">
+                                {{ reply.user.get_full_name }}
+                            </span>
+
+                            <span class="reply-date">
+                                {{ reply.created }}
+                            </span>
+                        </div>
+
+                        <div class="reply-text">
+                            <span class="mention">
+                                @{{ reply.parent.user.get_full_name }}
+                            </span>
+                            <br>
+                            {{ reply.text }}
+                        </div>
+
+                        <div class="reply-actions">
+
+                            <button class="reaction-btn"
+                                    style="font-size:.75rem;padding:.2rem .55rem"
+                                    onclick="toggleReact(this,'👍',3)">
+                                👍 <span>۳</span>
+                            </button>
+
+                            <button class="c-action-btn"
+                                    onclick="openReplyForm('{{ comment.id }}')">
+                                ↩ پاسخ
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            <!-- Reply Form -->
+            <div class="reply-form-wrap"
+                 id="reply-form-{{ comment.id }}">
+
+                <form class="reply-form-inner"
+                      method="post"
+                      action="{% url 'blog:article' article.slug %}">
+
+                    {% csrf_token %}
+                    <input type="hidden" name="parent_id" value="{{ comment.id }}">
+
+                    <div class="reply-form-label">
+                        ↩ {{ comment.user.get_full_name }}
+
+                        <button type="button" onclick="closeReplyForm('{{ comment.id }}')">
+                            ×
+                        </button>
+                    </div>
+
+                    <textarea class="reply-textarea"
+                              id="reply-text-{{ comment.id }}"
+                              name="text"
+                              required
+                              placeholder="پاسخ خود را بنویسید..."></textarea>
+
+                    <div class="reply-form-footer">
+
+                        <button type="button" class="reply-cancel"
+                                onclick="closeReplyForm('{{ comment.id }}')">
+                            انصراف
+                        </button>
+
+                        <button type="submit" class="reply-submit">
+                            ارسال پاسخ
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+    {% endif %}
+{% endfor %}
+      </div><!-- /comment-list -->
+
+
+    </div><!-- /comments-section -->
+
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- Reading progress -->
+    <div class="sidebar-card reading-widget">
+      <div class="sidebar-card-title" style="color:rgba(255,255,255,0.6)">پیشرفت مطالعه</div>
+      <div class="reading-circle">
+        <svg width="90" height="90" viewBox="0 0 90 90">
+          <circle class="reading-circle-track" cx="45" cy="45" r="36" fill="none" stroke-width="6"/>
+          <circle class="reading-circle-fill" id="readCircle" cx="45" cy="45" r="36" fill="none" stroke-width="6"/>
+        </svg>
+        <div class="reading-pct" id="readPct">0%</div>
+      </div>
+      <div class="reading-label">از مقاله خوانده‌اید</div>
+      <div class="reading-time-left" id="timeLeft">≈ ۸ دقیقه مانده</div>
+    </div>
+
+    <!-- Related articles -->
+    <div class="sidebar-card">
+      <div class="sidebar-card-title">مقالات مرتبط</div>
+      <div class="related-article" onclick="showToast('📄 باز کردن مقاله...')">
+        <div class="related-thumb">🧠</div>
+        <div><div class="related-title">راه‌های کم‌شناخته برای یادگیری سریع‌تر</div><div class="related-meta">رضا کریمی · ۶ دقیقه</div></div>
+      </div>
+      <div class="related-article" onclick="showToast('📄 باز کردن مقاله...')">
+        <div class="related-thumb">🔐</div>
+        <div><div class="related-title">امنیت دیجیتال در دنیای پس از کوانتوم</div><div class="related-meta">کیان نوری · ۹ دقیقه</div></div>
+      </div>
+      <div class="related-article" onclick="showToast('📄 باز کردن مقاله...')">
+        <div class="related-thumb">🎨</div>
+        <div><div class="related-title">طراحی برای احساس، نه فقط زیبایی</div><div class="related-meta">مریم حسینی · ۴ دقیقه</div></div>
+      </div>
+    </div>
+
+    <!-- Popular tags -->
+    <div class="sidebar-card">
+      <div class="sidebar-card-title">برچسب‌های محبوب</div>
+      <div class="tag-cloud">
+        <span class="tag-cloud-item">#هوش_مصنوعی</span>
+        <span class="tag-cloud-item">#فناوری</span>
+        <span class="tag-cloud-item">#علم</span>
+        <span class="tag-cloud-item">#هنر</span>
+        <span class="tag-cloud-item">#خلاقیت</span>
+        <span class="tag-cloud-item">#آینده</span>
+        <span class="tag-cloud-item">#یادگیری</span>
+        <span class="tag-cloud-item">#کسب‌وکار</span>
+      </div>
+    </div>
+
+    <!-- Newsletter mini -->
+    <div class="sidebar-card" style="background:var(--orange-pale);border-color:rgba(255,107,0,0.2)">
+      <div class="sidebar-card-title" style="color:var(--orange-dark)">خبرنامه هفتگی</div>
+      <p style="font-size:0.85rem;color:var(--gray);margin-bottom:1rem;line-height:1.7">بهترین مقالات هر هفته در ایمیل شما.</p>
+      <input class="comment-textarea" type="email" id="sideEmail" placeholder="ایمیل شما..." style="min-height:auto;padding:0.7rem 0.9rem;font-size:0.85rem">
+      <button class="comment-submit" style="width:100%;margin-top:0.6rem;background:var(--orange)" onclick="sideSubscribe()">عضویت ←</button>
+    </div>
+
+  </aside>
+</div>
+
+<!-- SCROLL TOP -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon">✨</div>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+
+</script>
+</body>
+</html>
+
+
+<script>
+// Dropdown
+  function toggleDropdown() {
+    document.getElementById('userTrigger').classList.toggle('open');
+    document.getElementById('userDropdown').classList.toggle('open');
+  }
+  document.addEventListener('click', e => {
+    const t = document.getElementById('userTrigger');
+    const d = document.getElementById('userDropdown');
+    if (!t.contains(e.target) && !d.contains(e.target)) { t.classList.remove('open'); d.classList.remove('open'); }
+  });
+  function confirmLogout() {
+    toggleDropdown();
+    setTimeout(() => { if(confirm('آیا مطمئن هستید که می‌خواهید خارج شوید؟')) showToast('👋 با موفقیت خارج شدید!'); }, 150);
+  }
+
+  // Reading progress
+  function updateReadProgress() {
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    const scrolled = window.scrollY;
+    const pct = Math.min(100, Math.round((scrolled / docH) * 100));
+
+    document.getElementById('readProgress').style.width = pct + '%';
+    document.getElementById('readPct').textContent = pct + '%';
+
+    const circumference = 226;
+    const offset = circumference - (pct / 100) * circumference;
+    document.getElementById('readCircle').style.strokeDashoffset = offset;
+
+    const minsLeft = Math.max(0, Math.round(8 * (1 - pct / 100)));
+    document.getElementById('timeLeft').textContent =
+      minsLeft === 0 ? '✅ مطالعه کامل شد' : `≈ ${minsLeft} دقیقه مانده`;
+
+    const st = document.getElementById('scrollTop');
+    if (scrolled > 300) st.classList.add('show');
+    else st.classList.remove('show');
+
+    const nb = document.getElementById('navbar');
+    if (scrolled > 50) nb.classList.add('scrolled');
+    else nb.classList.remove('scrolled');
+  }
+  window.addEventListener('scroll', updateReadProgress);
+
+
+
+  // Copy link
+  function copyLink() {
+    const input = document.getElementById('articleLink');
+    input.select();
+    document.execCommand('copy');
+    showToast('✅ لینک کپی شد!');
+  }
+
+  /* ======= COMMENT SYSTEM ======= */
+
+  // Char counter
+  function updateCharCount(el, spanId, max) {
+    const len = el.value.length;
+    const sp = document.getElementById(spanId);
+    const toFa = n => n.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    sp.textContent = toFa(len) + '/' + toFa(max);
+    sp.className = 'char-indicator' + (len > max * 0.9 ? ' danger' : len > max * 0.7 ? ' warn' : '');
+    if (len > max) el.value = el.value.slice(0, max);
+  }
+
+  // Reply system (open/close only — actual submission is a real POST form)
+  function openReplyForm(id) {
+    document.querySelectorAll('.reply-form-wrap').forEach(el => el.classList.remove('open'));
+    const form = document.getElementById('reply-form-' + id);
+    if (form) {
+      form.classList.add('open');
+      const ta = document.getElementById('reply-text-' + id);
+      if (ta) { ta.focus(); ta.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    }
+  }
+
+  function closeReplyForm(id) {
+    const form = document.getElementById('reply-form-' + id);
+    if (form) { form.classList.remove('open'); }
+    const ta = document.getElementById('reply-text-' + id);
+    if (ta) ta.value = '';
+  }
+
+  function toggleReplies(id) {
+    const wrap = document.getElementById('replies-' + id);
+    const btn = document.getElementById('show-replies-' + id);
+    if (!wrap) return;
+    const isHidden = wrap.style.display === 'none' || !wrap.style.display;
+    wrap.style.display = isHidden ? 'flex' : 'none';
+    if (isHidden) { wrap.style.flexDirection = 'column'; }
+    const count = wrap.querySelectorAll('.reply-item').length;
+    btn.textContent = isHidden ? ('▲ ' + toFarsi(count) + ' پاسخ') : ('▼ ' + toFarsi(count) + ' پاسخ');
+  }
+
+  // Reactions
+  function toggleReact(btn, emoji, baseCount) {
+    const isActive = btn.classList.contains('active') || btn.classList.contains('liked');
+    btn.classList.remove('active', 'liked');
+    const cls = emoji === '❤️' ? 'liked' : 'active';
+    if (!isActive) btn.classList.add(cls);
+    const span = btn.querySelector('span');
+    const current = parseInt(span.textContent.replace(/[^\d]/g, '')) || baseCount;
+    span.textContent = toFarsi(isActive ? Math.max(0, current - 1) : current + 1);
+  }
+
+  // Emoji picker
+  function toggleEmojiRow(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+
+  function insertEmoji(taId, emoji) {
+    const ta = document.getElementById(taId);
+    if (!ta) return;
+    const start = ta.selectionStart, end = ta.selectionEnd;
+    ta.value = ta.value.slice(0, start) + emoji + ta.value.slice(end);
+    ta.selectionStart = ta.selectionEnd = start + emoji.length;
+    ta.focus();
+    ta.dispatchEvent(new Event('input'));
+  }
+
+  function wrapText(taId, before, after) {
+    const ta = document.getElementById(taId);
+    if (!ta) return;
+    const start = ta.selectionStart, end = ta.selectionEnd;
+    const sel = ta.value.slice(start, end) || 'متن';
+    ta.value = ta.value.slice(0, start) + before + sel + after + ta.value.slice(end);
+    ta.focus();
+    ta.dispatchEvent(new Event('input'));
+  }
+
+  // Edit / Delete
+  function editComment(id) {
+    closeAllMenus();
+    const textEl = document.getElementById('text-' + id);
+    if (!textEl) return;
+    const old = textEl.textContent;
+    textEl.innerHTML = `<textarea style="width:100%;padding:0.6rem;border:1.5px solid var(--orange);border-radius:6px;font-family:Vazirmatn,sans-serif;font-size:0.88rem;resize:none;outline:none;min-height:80px;direction:rtl" id="edit-ta-${id}">${old}</textarea>
+      <div style="display:flex;gap:0.5rem;margin-top:0.5rem">
+        <button onclick="saveEdit('${id}')" style="padding:0.4rem 1rem;background:var(--orange);color:white;border:none;border-radius:6px;cursor:pointer;font-family:Vazirmatn,sans-serif;font-size:0.82rem;font-weight:600">ذخیره</button>
+        <button onclick="cancelEdit('${id}','${old}')" style="padding:0.4rem 1rem;border:1.5px solid #ccc;background:white;border-radius:6px;cursor:pointer;font-family:Vazirmatn,sans-serif;font-size:0.82rem">انصراف</button>
+      </div>`;
+    document.getElementById('edit-ta-' + id).focus();
+  }
+
+  function saveEdit(id) {
+    const ta = document.getElementById('edit-ta-' + id);
+    const val = ta ? ta.value.trim() : '';
+    if (!val) return;
+    const textEl = document.getElementById('text-' + id);
+    textEl.innerHTML = val + ' <span class="comment-edited">(ویرایش شده)</span>';
+    showToast('✏️ نظر ویرایش شد');
+  }
+
+  function cancelEdit(id, old) {
+    document.getElementById('text-' + id).textContent = old;
+  }
+
+  function deleteComment(id) {
+    closeAllMenus();
+    const el = document.getElementById('c-' + id) || document.querySelector(`[id*="${id}"]`);
+    if (!el) return;
+    if (confirm('آیا مطمئنید که می‌خواهید این نظر را حذف کنید؟')) {
+      el.style.opacity = '0'; el.style.transform = 'translateX(20px)';
+      el.style.transition = 'all 0.3s';
+      setTimeout(() => {
+        el.remove();
+        const badge = document.getElementById('commentCount');
+        const current = parseInt(badge.textContent.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))) || 0;
+        badge.textContent = toFarsi(Math.max(0, current - 1));
+      }, 320);
+      showToast('🗑️ نظر حذف شد');
+    }
+  }
+
+  // Sort
+  function sortComments(btn, mode) {
+    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    showToast(mode === 'newest' ? '🕐 مرتب‌سازی بر اساس جدیدترین' : '🔥 مرتب‌سازی بر اساس محبوب‌ترین');
+  }
+
+  // Menu
+  function toggleCommentMenu(id) {
+    const isOpen = document.getElementById(id).classList.contains('show');
+    closeAllMenus();
+    if (!isOpen) document.getElementById(id).classList.add('show');
+  }
+  function closeAllMenus() {
+    document.querySelectorAll('.comment-menu-popup').forEach(el => el.classList.remove('show'));
+  }
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.comment-menu')) closeAllMenus();
+  });
+
+
+  // Helpers
+  function toFarsi(n) { return n.toString().replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
+
+  // Side newsletter
+  function sideSubscribe() {
+    const email = document.getElementById('sideEmail').value.trim();
+    if (!email) { showToast('⚠️ ایمیل را وارد کنید'); return; }
+    document.getElementById('sideEmail').value = '';
+    showToast('🎉 با موفقیت عضو خبرنامه شدید!');
+  }
+
+  // Toast
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.querySelector(".like-form");
+    const button = document.getElementById("likeButton");
+    const count = document.getElementById("likeCount");
+
+    if (!form) return;
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const csrfToken = form.querySelector(
+            '[name="csrfmiddlewaretoken"]'
+        ).value;
+
+        fetch(form.action, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken,
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        })
+        .then(response => {
+            if (response.status === 401) {
+                return response.json().then(data => {
+                    alert(data.message);
+                    throw new Error("Not authenticated");
+                });
+            }
+
+            return response.json();
+        })
+        .then(data => {
+
+            if (data.success) {
+
+                // تغییر تعداد لایک
+                count.textContent = data.count;
+
+                // تغییر وضعیت دکمه
+                if (data.liked) {
+                    button.classList.add("liked");
+                // نمایش Toast
+                   showToast('❤️مقاله رو دوست داشتی!');
+                } else {
+                    button.classList.remove("liked");
+                    showToast('💔 مقاله رو دوست نداشتی!');
+                }
+
+            }
+
+        })
+        .catch(error => {
+            console.error("Like error:", error);
+        });
+    });
+
+});
+  document.addEventListener("DOMContentLoaded", function () {
+
+    const forms = document.querySelectorAll(".comment-like-form");
+
+    forms.forEach(form => {
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const csrfToken = form.querySelector(
+                '[name="csrfmiddlewaretoken"]'
+            ).value;
+
+            const button = form.querySelector(
+                ".comment-like-button"
+            );
+
+            const count = form.querySelector(
+                ".comment-like-count"
+            );
+
+            fetch(form.action, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrfToken,
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            })
+            .then(response => {
+
+                if (response.status === 401) {
+                    return response.json().then(data => {
+                        alert(data.message);
+                        throw new Error("Not authenticated");
+                    });
+                }
+
+                return response.json();
+            })
+            .then(data => {
+
+                if (data.success) {
+
+                    // تغییر تعداد لایک
+                    count.textContent = data.count;
+
+                    // تغییر وضعیت دکمه
+                    if (data.liked) {
+
+                        button.classList.add("liked");
+
+                        showToast(
+                            "❤️ کامنت را پسندیدید!"
+                        );
+
+                    } else {
+
+                        button.classList.remove("liked");
+
+                        showToast(
+                            "💔 از لایک کامنت منصرف شدید!"
+                        );
+                    }
+                }
+
+            })
+            .catch(error => {
+                console.error(
+                    "Comment like error:",
+                    error
+                );
+            });
+
+        });
+
+    });
+
+});
+</script>
+</body>
+</html>
