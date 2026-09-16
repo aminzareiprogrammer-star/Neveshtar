@@ -109,7 +109,7 @@ def contact(request):
         {"form": form}
     )
 @login_required
-def like_view(request, slug, id):
+def like_view(request, id):
 
     if request.method != "POST":
         return JsonResponse(
@@ -123,7 +123,6 @@ def like_view(request, slug, id):
     article = get_object_or_404(
         Article,
         id=id,
-        slug=slug,
         status=True
     )
 

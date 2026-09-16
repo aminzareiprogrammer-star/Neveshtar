@@ -76,7 +76,7 @@
 
       <div class="article-actions">
  <form method="POST"
-      action="{% url 'blog:like' article.slug article.id %}"
+     action="{% url 'blog:like' article.id %}"
       class="like-form">
 
     {% csrf_token %}
