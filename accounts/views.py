@@ -1,8 +1,9 @@
 from django.contrib.auth import  login, logout
+from .models import Profile
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
-from .forms import LoginForm, RegisterForm, UserEditForm
+from .forms import LoginForm, RegisterForm, UserEditForm ,ProfileImageForm
 from django.contrib.auth.decorators import login_required
 
 def login_view(request):
@@ -70,6 +71,27 @@ def edit_view(request):
 
     return redirect("home")
 
+@login_required
+def profile_image_view(request):
+    profile_obj, created = Profile.objects.get_or_create(
+        user=request.user
+    )
+
+    if request.method == "POST":
+        form = ProfileImageForm(
+            request.POST,
+            request.FILES,
+            instance=profile_obj
+        )
+
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "تصویر پروفایل با موفقیت ذخیره شد."
+            )
+
+    return redirect("home")
 
 def logout_view(request):
     logout(request)

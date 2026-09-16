@@ -81,41 +81,44 @@
             </div>
 
         </div>
+        <!-- Menu -->
+      <form method="post"
+      action="{% url 'profile_image' %}"
+      enctype="multipart/form-data">
 
-        <!-- Stats -->
-        <div class="dropdown-stats">
+    {% csrf_token %}
 
-            <div class="dropdown-stat">
-                <div class="dropdown-stat-num">
-                    {{ request.user.article_set.count }}
-                </div>
-                <div class="dropdown-stat-label">
-                    مقاله
-                </div>
-            </div>
+    <label class="form-label">
+        انتخاب تصویر پروفایل
+    </label>
 
-            <div class="dropdown-stat">
-                <div class="dropdown-stat-num">
-                    --
-                </div>
-                <div class="dropdown-stat-label">
-                    بازدید
-                </div>
-            </div>
+    <div class="upload-zone">
 
-            <div class="dropdown-stat">
-                <div class="dropdown-stat-num">
-                    --
-                </div>
-                <div class="dropdown-stat-label">
-                    دنبال‌کننده
-                </div>
-            </div>
-
+        <div class="upload-icon">
+            🖼️
         </div>
 
-        <!-- Menu -->
-        <div class="dropdown-menu">
+        <p class="upload-text">
+            تصویر پروفایل را انتخاب کنید
+            <br>
+            <strong>PNG، JPG، WEBP</strong>
+        </p>
+
+        <input
+            type="file"
+            name="image"
+            accept="image/png,image/jpeg,image/webp"
+            required
+        >
+
+    </div>
+
+    <button type="submit">
+        ذخیره تصویر
+    </button>
+
+</form>
+
 
 
 
@@ -129,10 +132,10 @@
             </a>
             <div class="dropdown-sep"></div>
 
-            <form action="{% url 'logout' %}" method="post">
+            <form  class="logout-form" action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="dropdown-logout">
-                    <span class="dropdown-item-icon">🚪</span>
+
                     خروج از حساب
                 </button>
             </form>
